@@ -1,24 +1,35 @@
-all: cacheSim
+OBJS	= MemoryManager.o Cache.o cacheSim.o
+SOURCE	= MemoryManager.cpp Cache.cpp cacheSim.cpp
+HEADER	= MemoryManager.h Cache.h
+OUT	= cacheSim
+CC	 = g++
+FLAGS	 = -g3 -c -Wall
+LFLAGS	 = -lm
 
-# Environment for C
-CC = gcc
-CFLAGS = -std=c99 -Wall
+all: $(OBJS)
+	$(CC) -g $(OBJS) -o $(OUT) $(LFLAGS)
 
-# Environment for C++
-CXX = g++
-CXXFLAGS = -std=c++11 -Wall
+MemoryManager.o: MemoryManager.cpp
+	$(CC) $(FLAGS) MemoryManager.cpp -std=c++11
 
-cacheSim: cacheSim.cpp
-	$(CXX) -o $@ $^ -lm
+Cache.o: Cache.cpp
+	$(CC) $(FLAGS) Cache.cpp -std=c++11
 
-MemoryManager.o: MemoryManager.cpp MemoryManager.h
-	$(CXX) -c $(CXXFLAGS)  -o $@ $^ -lm
-
-Cache.o: Cache.cpp Cache.h
-	$(CXX) -c $(CXXFLAGS)  -o $@ $^ -lm
+cacheSim.o: cacheSim.cpp
+	$(CC) $(FLAGS) cacheSim.cpp -std=c++11
 
 
-.PHONY: clean
 clean:
-	rm -f *.o
-	rm -f cacheSim
+	rm -f $(OBJS) $(OUT)
+
+debug: $(OUT)
+	valgrind $(OUT)
+
+valgrind: $(OUT)
+	valgrind ./$(OUT)
+
+valgrind_leakcheck: $(OUT)
+	valgrind --leak-check=full ./$(OUT)
+
+valgrind_extreme: $(OUT)
+	valgrind --leak-check=full --show-leak-kinds=all --leak-resolution=high --track-origins=yes --vgdb=yes ./$(OUT)
