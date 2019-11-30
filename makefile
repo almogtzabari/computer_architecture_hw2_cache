@@ -1,6 +1,6 @@
 OBJS	= MemoryManager.o Cache.o cacheSim.o
 SOURCE	= MemoryManager.cpp Cache.cpp cacheSim.cpp
-HEADER	= MemoryManager.h Cache.h
+HEADER	= MemoryManager.h Cache.h Logger.h
 OUT	= cacheSim
 CC	 = g++
 FLAGS	 = -g3 -c -Wall
