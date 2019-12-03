@@ -13,7 +13,7 @@ typedef enum{
 typedef struct{
     unsigned memory_cycles;     // Number of cycles to access the main memory.
     unsigned block_size;        // Block size in bytes.
-    WritePolicy policy;         // Write policy (write allocate or no write allocate).
+    WritePolicy policy;         // Write policy (write allocate or no updateBlock allocate).
     unsigned l1_size;           // L1 size in bytes.
     unsigned l1_associativity;  // L1 associativity.
     unsigned l1_cycle;          // Number of cycles to access L1.

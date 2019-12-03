@@ -6,8 +6,9 @@
 class CacheLine {
 private:
     bool valid;
+    bool dirty;
     unsigned tag;
-    unsigned block_start_addr;
+    unsigned block_address;
     unsigned block_size;
 
 public:
@@ -24,7 +25,15 @@ public:
     CacheLine(const CacheLine& cache_line);
 
     bool isValid();
+    void invalidate();
+    void validate();
+    bool isDirty();
+    void setDirty();
+    void setNotDirty();
+    unsigned getBlockAddress();
     unsigned getTag();
+    void setTag(unsigned tag);
+    void setBlockAddress(unsigned addr);
 };
 
 

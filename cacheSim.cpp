@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
 
         stringstream ss(line);
         string address;
-        char operation = 0; // read (R) or write (W)
+        char operation = 0; // read (R) or updateBlock (W)
         if (!(ss >> operation >> address)) {
             // Operation appears in an Invalid format
             cout << "Command Format error" << endl;

@@ -15,6 +15,8 @@ public:
     Set(unsigned associativity, unsigned block_size);
     bool blockExists(unsigned tag);
     bool write(unsigned addr, unsigned tag);
+    unsigned evict();
+    void insertBlock(unsigned tag, unsigned addr);
 };
 
 

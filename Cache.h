@@ -28,13 +28,23 @@ private:
     std::vector<Set> sets;
     Statistics stats;
 
-    Set& getSetByAddress(unsigned addr);
+    unsigned getSetIDByAddress(unsigned addr);
     unsigned getTagByAddress(unsigned addr);
 
 public:
     Cache(CacheConfig cfg);
     bool read(unsigned addr);
     bool write(unsigned addr);
+    void updateBlock(unsigned addr);
+    void insertBlock(unsigned addr);
+    void addCycles();
+
+    /**
+     * Evicts a block from cache and returns block address if needed to be written to lower level cache.
+     * @param for_address - address of block to evict from its set.
+     * @return block address need to be written, 0 otherwise.
+     */
+    unsigned evict(unsigned for_address);
 
 };
 
