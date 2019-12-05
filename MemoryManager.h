@@ -29,6 +29,7 @@ private:
     MMConfig config;
     Cache L1;
     Cache L2;
+    unsigned memory_cycles;
 
 
 

@@ -2,6 +2,7 @@
 
 #ifndef COMPUTER_ARCHITECTURE_HW2_CACHE_CACHE_H
 #define COMPUTER_ARCHITECTURE_HW2_CACHE_CACHE_H
+#define OUT
 
 #include <vector>
 #include "Set.h"
@@ -33,8 +34,8 @@ private:
 
 public:
     Cache(CacheConfig cfg);
-    bool read(unsigned addr);
-    bool write(unsigned addr);
+    bool read(unsigned addr, bool update_hit_rate, bool update_lru, OUT bool* write_back, OUT unsigned* write_back_addr);
+    bool write(unsigned addr, bool update_hit_rate, bool update_lru, OUT bool* write_back, OUT unsigned* write_back_addr);
     void updateBlock(unsigned addr);
     void insertBlock(unsigned addr);
     void addCycles();

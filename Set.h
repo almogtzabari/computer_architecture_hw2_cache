@@ -1,7 +1,7 @@
 
 #ifndef COMPUTER_ARCHITECTURE_HW2_CACHE_SET_H
 #define COMPUTER_ARCHITECTURE_HW2_CACHE_SET_H
-
+#define OUT
 
 #include <vector>
 #include "CacheLine.h"
@@ -15,7 +15,7 @@ public:
     Set(unsigned associativity, unsigned block_size);
     bool blockExists(unsigned tag);
     bool write(unsigned addr, unsigned tag);
-    unsigned evict();
+    bool evict(OUT unsigned* write_back_addr);
     void insertBlock(unsigned tag, unsigned addr);
 };
 

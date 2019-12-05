@@ -9,11 +9,25 @@ Cache::Cache(CacheConfig cfg) : config(cfg), sets(config.num_of_blocks / config.
     LOG(TRACE) << "Cache constructed at " << this;
 }
 
-bool Cache::read(unsigned addr) {
+//bool Cache::read(unsigned addr) {
+//    Set& set = sets[getSetIDByAddress(addr)];
+//    unsigned tag = getTagByAddress(addr);
+//    bool hit = set.blockExists(tag);
+//    hit? stats.total_read_hit++ : stats.total_read_miss++;
+//    return hit;
+//}
+bool Cache::read(unsigned addr, bool update_hit_rate, bool update_lru, bool* write_back, unsigned *write_back_addr) {
+    stats.total_cycles += config.cycles;
     Set& set = sets[getSetIDByAddress(addr)];
     unsigned tag = getTagByAddress(addr);
     bool hit = set.blockExists(tag);
-    hit? stats.total_read_hit++ : stats.total_read_miss++;
+    if(update_hit_rate){
+        hit? stats.total_read_hit++ : stats.total_read_miss++;
+    }
+    if(hit && update_lru){
+        // Update LRU
+    }
+
     return hit;
 }
 
@@ -59,14 +73,53 @@ void Cache::insertBlock(unsigned addr) {
     // TODO: Should we add cycles?
 }
 
-bool Cache::write(unsigned addr) {
+//bool Cache::write(unsigned addr) {
+//    Set& set = sets[getSetIDByAddress(addr)];
+//    unsigned tag = getTagByAddress(addr);
+//    bool hit = set.blockExists(tag);
+//    hit? stats.total_write_hit++ : stats.total_write_miss++;
+//    return hit;
+//}
+
+bool Cache::write(unsigned addr, bool update_hit_rate, bool update_lru, bool *write_back, unsigned *write_back_addr) {
+    stats.total_cycles += config.cycles;
     Set& set = sets[getSetIDByAddress(addr)];
     unsigned tag = getTagByAddress(addr);
     bool hit = set.blockExists(tag);
-    hit? stats.total_write_hit++ : stats.total_write_miss++;
+    if(update_hit_rate){
+        // We don't know if the block is supposed to be here
+        hit? stats.total_write_hit++ : stats.total_write_miss++;
+        if(hit && update_lru){
+            // Todo: Update LRU
+            // Todo: set dirty
+        }
+    }
+    else{
+        // We know for sure that the block should or should not be here
+        if(!hit){
+            // The block was not suppose to be here - Insert new block
+            *write_back = set.evict(write_back_addr);
+            set.insertBlock(tag, addr);
+            if(update_lru){
+                // Todo: Update LRU
+            }
+        }
+        else{
+            // The block was suppose to be here - Update the block
+            // Todo: update the block
+            if(update_lru){
+                // Todo: Update LRU
+                // Todo: Set dirty
+            }
+        }
+    }
     return hit;
 }
 
 void Cache::addCycles() {
     this->stats.total_cycles += this->config.cycles;
 }
+
+
+
+
