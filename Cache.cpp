@@ -10,7 +10,7 @@ Cache::Cache(CacheConfig cfg) : config(cfg), sets(config.num_of_blocks / config.
 }
 
 
-bool Cache::read(unsigned addr, bool update_hit_rate, bool update_lru, bool* write_back, unsigned *write_back_addr) {
+bool Cache::read(unsigned addr, bool update_hit_rate, bool update_lru, EVICTION_STATUS* eviction_status, unsigned *write_back_addr) {
     stats.total_cycles += config.cycles;
     Set& set = sets[getSetIDByAddress(addr)];
     unsigned tag = getTagByAddress(addr);
@@ -25,7 +25,7 @@ bool Cache::read(unsigned addr, bool update_hit_rate, bool update_lru, bool* wri
     return hit;
 }
 
-bool Cache::write(unsigned addr, bool update_hit_rate, bool update_lru, bool* write_back, unsigned *write_back_addr) {
+bool Cache::write(unsigned addr, bool update_hit_rate, bool update_lru, EVICTION_STATUS* eviction_status, unsigned *write_back_addr) {
     stats.total_cycles += config.cycles;
     Set& set = sets[getSetIDByAddress(addr)];
     unsigned tag = getTagByAddress(addr);
@@ -42,7 +42,7 @@ bool Cache::write(unsigned addr, bool update_hit_rate, bool update_lru, bool* wr
         // We know for sure that the block should or should not be here
         if(!hit){
             // The block was not suppose to be here - Insert new block
-            *write_back = set.evict(write_back_addr);
+            *eviction_status = set.evict(write_back_addr);
             set.insertBlock(tag, addr);
             if(update_lru){
                 set.updateLRU(tag);
@@ -83,6 +83,25 @@ unsigned Cache::getTagByAddress(unsigned addr) {
 
 Statistics Cache::getStats() {
     return this->stats;
+}
+
+bool Cache::blockExists(unsigned addr) {
+    unsigned tag = getTagByAddress(addr);
+    for (auto& set: sets){
+        if(set.blockExists(tag)){
+            return true;
+        }
+    }
+    return false;
+}
+
+void Cache::invalidateBlock(unsigned addr) {
+    unsigned tag = getTagByAddress(addr);
+    for (auto& set: sets){
+        if(set.blockExists(tag)){
+            set.invalidate(tag);
+        }
+    }
 }
 
 //bool Cache::read(unsigned addr) {

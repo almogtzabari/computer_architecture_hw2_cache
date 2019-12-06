@@ -21,18 +21,20 @@ bool Set::blockExists(unsigned tag) {
     return false;
 }
 
-bool Set::evict(unsigned* write_back_addr) {
+EVICTION_STATUS Set::evict(unsigned* write_back_addr) {
     CacheLine& line_to_evict = lines[ranking[ranking.size()-1]];
-    if(line_to_evict.isValid() && line_to_evict.isDirty()){
-        // Block needs to be evicted
-        *write_back_addr = line_to_evict.getBlockAddress();
+    if(line_to_evict.isValid()){
         line_to_evict.invalidate();
-        return true;
+        *write_back_addr = line_to_evict.getBlockAddress();
+        if(line_to_evict.isDirty()){
+            return WRITE_BACK;
+        }
+        else{
+            return INVALIDATE;
+        }
     }
     else{
-        // Block does not need to be evicted
-        line_to_evict.invalidate();
-        return false;
+        return NOTHING;
     }
 }
 
@@ -50,6 +52,21 @@ void Set::setDirty(unsigned tag) {
     for (auto& line: lines){
         if(line.getTag() == tag){
             line.setDirty();
+        }
+    }
+}
+
+void Set::invalidate(unsigned tag) {
+    assert(this->blockExists(tag));
+    for(unsigned i = 0; i < ranking.size(); i++) {
+        if (lines[ranking[i]].getTag() == tag && lines[ranking[i]].isValid()) {
+            lines[ranking[i]].invalidate();
+            unsigned old = ranking[i];
+            for (unsigned j = i; j < ranking.size()-1; j++) {
+                ranking[j] = ranking[j + 1];
+            }
+            ranking[ranking.size()-1] = old;
+            return;
         }
     }
 }

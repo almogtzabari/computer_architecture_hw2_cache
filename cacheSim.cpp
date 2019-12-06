@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
         }
 
         // DEBUG - remove this line
-        cout << "operation: " << operation;
+        cout << "----- operation: " << operation;
 
         string cutAddress = address.substr(2); // Removing the "0x" part of the address
 
@@ -90,7 +90,7 @@ int main(int argc, char **argv) {
         num = strtoul(cutAddress.c_str(), NULL, 16);
 
         // DEBUG - remove this line
-        cout << " (dec) " << num << endl;
+        cout << " (dec) " << num << " -----" << endl;
 
         if(operation == 'r'){
             mm.read(num);
