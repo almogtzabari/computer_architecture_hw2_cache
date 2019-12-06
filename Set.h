@@ -17,6 +17,8 @@ public:
     bool write(unsigned addr, unsigned tag);
     bool evict(OUT unsigned* write_back_addr);
     void insertBlock(unsigned tag, unsigned addr);
+    void setDirty(unsigned tag);
+    void updateLRU(unsigned tag);
 };
 
 

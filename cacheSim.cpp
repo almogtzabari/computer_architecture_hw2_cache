@@ -92,11 +92,18 @@ int main(int argc, char **argv) {
         // DEBUG - remove this line
         cout << " (dec) " << num << endl;
 
+        if(operation == 'r'){
+            mm.read(num);
+        }
+        else if(operation == 'w'){
+            mm.write(num);
+        }
     }
 
-    double L1MissRate;
-    double L2MissRate;
-    double avgAccTime;
+    SimStats stats = mm.getStats();
+    double L1MissRate = stats.miss_rate_l1;
+    double L2MissRate = stats.miss_rate_l2;
+    double avgAccTime = stats.average_access_time;
 
     printf("L1miss=%.03f ", L1MissRate);
     printf("L2miss=%.03f ", L2MissRate);

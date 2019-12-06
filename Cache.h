@@ -36,9 +36,10 @@ public:
     Cache(CacheConfig cfg);
     bool read(unsigned addr, bool update_hit_rate, bool update_lru, OUT bool* write_back, OUT unsigned* write_back_addr);
     bool write(unsigned addr, bool update_hit_rate, bool update_lru, OUT bool* write_back, OUT unsigned* write_back_addr);
-    void updateBlock(unsigned addr);
-    void insertBlock(unsigned addr);
-    void addCycles();
+    Statistics getStats();
+//    void updateBlock(unsigned addr);
+//    void insertBlock(unsigned addr);
+//    void addCycles();
 
     /**
      * Evicts a block from cache and returns block address if needed to be written to lower level cache.

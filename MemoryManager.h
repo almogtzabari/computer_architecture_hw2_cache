@@ -23,22 +23,32 @@ typedef struct{
 
 } MMConfig;
 
+typedef struct{
+    double miss_rate_l1;
+    double miss_rate_l2;
+    double average_access_time;
+} SimStats;
+
+typedef struct {
+    unsigned memory_cycles;
+    unsigned total_reads;
+    unsigned total_writes;
+} MMStats;
+
 
 class MemoryManager {
 private:
     MMConfig config;
     Cache L1;
     Cache L2;
-    unsigned memory_cycles;
-
-
+    MMStats stats;
 
 public:
     MemoryManager(MMConfig cfg);
 
     void read(unsigned addr);
     void write(unsigned addr);
-
+    SimStats getStats();
 
 };
 
