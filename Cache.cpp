@@ -85,97 +85,34 @@ Statistics Cache::getStats() {
 
 bool Cache::blockExists(unsigned addr) {
     unsigned tag = getTagByAddress(addr);
-    for (auto& set: sets){
-        if(set.blockExists(tag)){
-            return true;
-        }
-    }
-    return false;
+    Set& set = sets[getSetIDByAddress(addr)];
+    return set.blockExists(tag);
 }
 
 void Cache::invalidateBlock(unsigned addr) {
+    assert(blockExists(addr));
     unsigned tag = getTagByAddress(addr);
-    for (auto& set: sets){
-        if(set.blockExists(tag)){
-            set.invalidate(tag);
-        }
-    }
+    Set& set = sets[getSetIDByAddress(addr)];
+    set.invalidate(tag);
 }
 
 void Cache::setBlockDirty(unsigned addr) {
+    assert(blockExists(addr));
     unsigned tag = getTagByAddress(addr);
-    for (auto& set: sets){
-        if(set.blockExists(tag)){
-            set.setDirty(tag);
-        }
-    }
+    Set& set = sets[getSetIDByAddress(addr)];
+    set.setDirty(tag);
 }
 
 bool Cache::blockIsDirty(unsigned addr) {
+    assert(blockExists(addr));
     unsigned tag = getTagByAddress(addr);
-    for (auto& set: sets){
-        if(set.blockExists(tag)){
-            set.blockIsDirty(tag);
-        }
-    }
-    // Should not get here!
-    assert(false);
-    return false;
+    Set& set = sets[getSetIDByAddress(addr)];
+    return set.blockIsDirty(tag);
 }
 
 void Cache::setBlockNotDirty(unsigned addr) {
+    assert(blockExists(addr));
     unsigned tag = getTagByAddress(addr);
-    for (auto& set: sets){
-        if(set.blockExists(tag)){
-            set.setNotDirty(tag);
-        }
-    }
+    Set& set = sets[getSetIDByAddress(addr)];
+    set.setNotDirty(tag);
 }
-
-//bool Cache::read(unsigned addr) {
-//    Set& set = sets[getSetIDByAddress(addr)];
-//    unsigned tag = getTagByAddress(addr);
-//    bool hit = set.blockExists(tag);
-//    hit? stats.total_read_hit++ : stats.total_read_miss++;
-//    return hit;
-//}
-
-
-//void Cache::updateBlock(unsigned addr) {
-//    Set& set = sets[getSetIDByAddress(addr)];
-//    unsigned tag = getTagByAddress(addr);
-//    // TODO: Should we update ranking?
-//    assert(set.blockExists(tag));
-//}
-
-
-
-//unsigned Cache::evict(unsigned for_address) {
-//    unsigned set_id = getSetIDByAddress(for_address);
-//    Set& set = sets[set_id];
-//    return set.evict();
-//}
-
-//void Cache::insertBlock(unsigned addr) {
-//    unsigned tag = getTagByAddress(addr);
-//    unsigned set_id = getSetIDByAddress(addr);
-//    sets[set_id].insertBlock(tag, addr);
-//    // TODO: Should we add cycles?
-//}
-
-//bool Cache::write(unsigned addr) {
-//    Set& set = sets[getSetIDByAddress(addr)];
-//    unsigned tag = getTagByAddress(addr);
-//    bool hit = set.blockExists(tag);
-//    hit? stats.total_write_hit++ : stats.total_write_miss++;
-//    return hit;
-//}
-
-
-//void Cache::addCycles() {
-//    this->stats.total_cycles += this->config.cycles;
-//}
-
-
-
-
