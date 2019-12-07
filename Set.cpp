@@ -93,6 +93,9 @@ bool Set::blockIsDirty(unsigned tag) {
             return line.isDirty();
         }
     }
+    assert(false);
+    // Should not get here
+    return false;
 }
 
 void Set::setNotDirty(unsigned tag) {
