@@ -25,15 +25,17 @@ bool Cache::read(unsigned addr, bool update_hit_rate, bool update_lru, EVICTION_
     return hit;
 }
 
-bool Cache::write(unsigned addr, bool update_hit_rate, bool update_lru, EVICTION_STATUS* eviction_status, unsigned *write_back_addr) {
-    stats.total_cycles += config.cycles;
+bool Cache::write(unsigned addr, bool update_hit_rate, bool update_cycles, EVICTION_STATUS* eviction_status, unsigned *write_back_addr) {
+    if(update_cycles){
+        stats.total_cycles += config.cycles;
+    }
     Set& set = sets[getSetIDByAddress(addr)];
     unsigned tag = getTagByAddress(addr);
     bool hit = set.blockExists(tag);
     if(update_hit_rate){
         // We don't know if the block is supposed to be here
         hit? stats.total_write_hit++ : stats.total_write_miss++;
-        if(hit && update_lru){
+        if(hit){
             set.updateLRU(tag);
             set.setDirty(tag);
         }
@@ -44,16 +46,12 @@ bool Cache::write(unsigned addr, bool update_hit_rate, bool update_lru, EVICTION
             // The block was not suppose to be here - Insert new block
             *eviction_status = set.evict(write_back_addr);
             set.insertBlock(tag, addr);
-            if(update_lru){
-                set.updateLRU(tag);
-            }
+            set.updateLRU(tag);
         }
         else{
             // The block was suppose to be here - Update the block
-            if(update_lru){
-                set.updateLRU(tag);
-                set.setDirty(tag);
-            }
+            set.updateLRU(tag);
+            set.setDirty(tag);
         }
     }
     return hit;
@@ -100,6 +98,15 @@ void Cache::invalidateBlock(unsigned addr) {
     for (auto& set: sets){
         if(set.blockExists(tag)){
             set.invalidate(tag);
+        }
+    }
+}
+
+void Cache::setBlockDirty(unsigned addr) {
+    unsigned tag = getTagByAddress(addr);
+    for (auto& set: sets){
+        if(set.blockExists(tag)){
+            set.setDirty(tag);
         }
     }
 }

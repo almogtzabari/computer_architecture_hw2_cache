@@ -5,9 +5,9 @@
 
 Set::Set(unsigned associativity, unsigned block_size) : lines(associativity, CacheLine(block_size)),
                                                         ranking(associativity) {
-    unsigned i = 0;
+    unsigned i = associativity;
     for(auto& num: ranking){
-        num = i++;
+        num = --i;
     }
     LOG(TRACE) << "Set constructed at " << this;
 }
@@ -50,7 +50,7 @@ void Set::insertBlock(unsigned tag, unsigned addr) {
 void Set::setDirty(unsigned tag) {
     assert(this->blockExists(tag));
     for (auto& line: lines){
-        if(line.getTag() == tag){
+        if(line.getTag() == tag && line.isValid()){
             line.setDirty();
         }
     }

@@ -35,9 +35,10 @@ private:
 public:
     Cache(CacheConfig cfg);
     bool read(unsigned addr, bool update_hit_rate, bool update_lru, OUT EVICTION_STATUS* eviction_status, OUT unsigned* write_back_addr);
-    bool write(unsigned addr, bool update_hit_rate, bool update_lru, OUT EVICTION_STATUS* eviction_status, OUT unsigned* write_back_addr);
+    bool write(unsigned addr, bool update_hit_rate, bool update_cycles, OUT EVICTION_STATUS* eviction_status, OUT unsigned* write_back_addr);
     bool blockExists(unsigned addr);
     void invalidateBlock(unsigned addr);
+    void setBlockDirty(unsigned addr);
     Statistics getStats();
 //    void updateBlock(unsigned addr);
 //    void insertBlock(unsigned addr);
