@@ -111,6 +111,27 @@ void Cache::setBlockDirty(unsigned addr) {
     }
 }
 
+bool Cache::blockIsDirty(unsigned addr) {
+    unsigned tag = getTagByAddress(addr);
+    for (auto& set: sets){
+        if(set.blockExists(tag)){
+            set.blockIsDirty(tag);
+        }
+    }
+    // Should not get here!
+    assert(false);
+    return false;
+}
+
+void Cache::setBlockNotDirty(unsigned addr) {
+    unsigned tag = getTagByAddress(addr);
+    for (auto& set: sets){
+        if(set.blockExists(tag)){
+            set.setNotDirty(tag);
+        }
+    }
+}
+
 //bool Cache::read(unsigned addr) {
 //    Set& set = sets[getSetIDByAddress(addr)];
 //    unsigned tag = getTagByAddress(addr);

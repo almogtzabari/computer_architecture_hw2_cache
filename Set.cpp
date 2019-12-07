@@ -85,3 +85,21 @@ void Set::updateLRU(unsigned tag) {
     }
     ranking[0] = fresh_one;
 }
+
+bool Set::blockIsDirty(unsigned tag) {
+    assert(this->blockExists(tag));
+    for (auto& line: lines){
+        if(line.getTag() == tag && line.isValid()){
+            return line.isDirty();
+        }
+    }
+}
+
+void Set::setNotDirty(unsigned tag) {
+    assert(this->blockExists(tag));
+    for (auto& line: lines){
+        if(line.getTag() == tag && line.isValid()){
+            line.setNotDirty();
+        }
+    }
+}

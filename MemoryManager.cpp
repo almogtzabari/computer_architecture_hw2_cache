@@ -42,7 +42,6 @@ void MemoryManager::read(unsigned addr) {
                 // Evict block from L2 to main memory
                 LOG(DEBUG) << "Address " << write_back_addr << " was evicted from L2 during insertion.";
                 LOG(DEBUG) << "Writing address " << write_back_addr << " to the main memory.";
-//                this->stats.memory_cycles += config.memory_cycles;
                 if(L1.blockExists(write_back_addr)){
                     LOG(DEBUG) << "Address " << write_back_addr << " is also in L1. Invalidating it!";
                     L1.invalidateBlock(write_back_addr);
@@ -73,6 +72,7 @@ void MemoryManager::read(unsigned addr) {
             /** Block is not in L1 but is in L2 */
             LOG(DEBUG) << "Address " << addr << " was found in L2.";
 
+
             // Insert the block fetched from L2 into L1
             LOG(DEBUG) << "Inserting address " << addr << " to L1.";
             L1.write(addr, false, false, &eviction_status, &write_back_addr);
@@ -80,7 +80,7 @@ void MemoryManager::read(unsigned addr) {
                 // Evict block from L1 to L2
                 LOG(DEBUG) << "Address" << write_back_addr << " was evicted from L1 during the insertion.";
                 LOG(DEBUG) << "Writing address " << write_back_addr << " to L2.";
-                L2.write(write_back_addr, false, true, &eviction_status, &write_back_addr);
+                L2.write(write_back_addr, false, false, &eviction_status, &write_back_addr);
             }
             eviction_status = NOTHING;
         }
@@ -93,48 +93,6 @@ void MemoryManager::read(unsigned addr) {
     }
 }
 
-//void MemoryManager::write(unsigned int addr) {
-//    unsigned addr_to_write_back = 0;
-//    unsigned tag = 0;
-//    if(!L1.write(addr)){
-//        // Block is not in L1
-//        if(!L2.write(addr)){
-//            // Block is not in L1 and not in L2
-//            if(config.policy){
-//                addr_to_write_back = L2.evict(addr);
-//                if(addr_to_write_back){
-//                    // Mem cycles ++
-//                }
-//                L2.insertBlock(addr);
-//                addr_to_write_back = L1.evict(addr);
-//                if(addr_to_write_back){
-//                    L2.updateBlock(addr_to_write_back);
-//                }
-//                L1.insertBlock(addr);
-//            }
-//            else{
-//                // Mem cycle ++
-//            }
-//        }
-//        else{
-//            // Block is not in L1 but is in L2
-//            L2.updateBlock(addr);
-//            if(config.policy){
-//                addr_to_write_back = L1.evict(addr);
-//                if(addr_to_write_back){
-//                    L2.updateBlock(addr_to_write_back);
-//                }
-//                L2.read(addr);
-//                L1.insertBlock(addr);
-//            }
-//        }
-//    }
-//    else{
-//        // Block is in L1 (and also in L2 - "INCLUSIVE")
-//        // Nothing to be done
-//        L1.updateBlock(addr);
-//    }
-//}
 
 void MemoryManager::write(unsigned int addr) {
     LOG(DEBUG) << "MemoryManager writes address " << addr << ".";

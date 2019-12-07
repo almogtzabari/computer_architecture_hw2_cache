@@ -20,10 +20,12 @@ private:
 public:
     Set(unsigned associativity, unsigned block_size);
     bool blockExists(unsigned tag);
+    bool blockIsDirty(unsigned tag);
     bool write(unsigned addr, unsigned tag);
     EVICTION_STATUS evict(OUT unsigned* write_back_addr);
     void insertBlock(unsigned tag, unsigned addr);
     void setDirty(unsigned tag);
+    void setNotDirty(unsigned tag);
     void invalidate(unsigned tag);
     void updateLRU(unsigned tag);
 };
