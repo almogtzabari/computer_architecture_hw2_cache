@@ -132,7 +132,6 @@ void MemoryManager::write(unsigned int addr) {
                     // Evict block from L2 to main memory
                     LOG(DEBUG) << "Address " << write_back_addr << " was evicted from L2 during insertion.";
                     LOG(DEBUG) << "Writing address " << write_back_addr << " to the main memory.";
-//                    this->stats.memory_cycles += config.memory_cycles;
                     if(L1.blockExists(write_back_addr)){
                         LOG(DEBUG) << "Address " << write_back_addr << " is also in L1. Invalidating it!";
                         L1.invalidateBlock(write_back_addr);
