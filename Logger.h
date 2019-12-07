@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#define _LOG_LEVEL DEBUG
+#define _LOG_LEVEL USER
 
 using std::string;
 using std::cout;
