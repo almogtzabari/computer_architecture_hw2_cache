@@ -1,0 +1,11 @@
+all_files="$(ls)"
+for l in $all_files; do
+    if [[ $l == *".command" ]]
+    then
+      cat $l | sed 's/.\{14\}$//' > "$l"_n
+      cat "$l"_n > $l
+      rm -f "$l"_n
+    fi
+done
+
+#echo $all_files

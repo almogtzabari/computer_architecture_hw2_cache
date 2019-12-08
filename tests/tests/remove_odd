@@ -1,0 +1,11 @@
+all_files="$(ls)"
+for l in $all_files; do
+    NUMBER=$(echo $l | sed 's/[^0-9]*//g')
+    ((modulo = $NUMBER %2 ))
+    if [ $modulo -eq 1  ]
+      then
+        rm -f $l
+    fi
+done
+
+#echo $all_files
