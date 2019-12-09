@@ -13,7 +13,7 @@ MemoryManager::MemoryManager(MMConfig cfg) : config(cfg),
 void MemoryManager::read(unsigned addr) {
     LOG(DEBUG) << "MemoryManager reads address " << addr << ".";
     stats.total_reads++;
-    addr = addr - (addr % config.block_size);
+    addr = addr - (addr % config.block_size); // Calculating the address's block starting address.
     EVICTION_STATUS eviction_status = NOTHING;
     unsigned write_back_addr = 0;
 

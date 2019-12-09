@@ -5,11 +5,17 @@
 #include "Logger.h"
 #include "Cache.h"
 
+/**
+ * An enum that defines the writing policy.
+ */
 typedef enum{
     WRITE_NO_ALLOCATE = 0,
     WRITE_ALLOCATE = 1
 }WritePolicy;
 
+/**
+ * Defines the structure of the different caches, access times to caches and memory, associativity and writing policy.
+ */
 typedef struct{
     unsigned memory_cycles;     // Number of cycles to access the main memory.
     unsigned block_size;        // Block size in bytes.
@@ -23,19 +29,27 @@ typedef struct{
 
 } MMConfig;
 
+/**
+ * Statistics of miss rate of each cache and average access time.
+ */
 typedef struct{
     double miss_rate_l1;
     double miss_rate_l2;
     double average_access_time;
 } SimStats;
 
+/**
+ * Statistics of total read and write commands and total memory cycles.
+ */
 typedef struct {
     unsigned memory_cycles;
     unsigned total_reads;
     unsigned total_writes;
 } MMStats;
 
-
+/**
+ * The memory "itself", includes the different caches which are built according to the config, and saves different statistics.
+ */
 class MemoryManager {
 private:
     MMConfig config;
@@ -46,8 +60,22 @@ private:
 public:
     MemoryManager(MMConfig cfg);
 
+    /**
+     * A read operation from the memory.
+     * @param addr - A memory address to look for.
+     */
     void read(unsigned addr);
+
+    /**
+     * A write operation to the memory.
+     * @param addr - A memory address to look for.
+     */
     void write(unsigned addr);
+
+    /**
+     * Calculates hit rates of each cache and average access time.
+     * @return
+     */
     SimStats getStats();
 
 };
