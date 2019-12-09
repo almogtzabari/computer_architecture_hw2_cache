@@ -61,6 +61,8 @@ int main(int argc, char **argv) {
             return 0;
         }
     }
+
+    // Constructing our MemoryManager (simulator)
     MMConfig cfg = {MemCyc, static_cast<unsigned int>(pow(2, BSize)), WritePolicy(WrAlloc),
                     static_cast<unsigned int>(pow(2, L1Size)), static_cast<unsigned int>(pow(2, L1Assoc)), L1Cyc,
                     static_cast<unsigned int>(pow(2, L2Size)),
@@ -100,6 +102,7 @@ int main(int argc, char **argv) {
         }
     }
 
+    // Retrieving the data collected from the simulator
     SimStats stats = mm.getStats();
     double L1MissRate = stats.miss_rate_l1;
     double L2MissRate = stats.miss_rate_l2;

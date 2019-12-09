@@ -47,14 +47,6 @@ public:
     bool blockIsDirty(unsigned tag);
 
     /**
-     *  //TODO : CHECK WHAT IS THIS FUNCTION
-     * @param addr
-     * @param tag
-     * @return
-     */
-    bool write(unsigned addr, unsigned tag);
-
-    /**
      * Evicts a block, updates the ranking, and returns an address of the evicted block and an eviction status.
      * @param write_back_addr - The evicted block's address.
      * @return - A status that determines if the evicted block should be written to lower levels or be invalidated in upper levels.

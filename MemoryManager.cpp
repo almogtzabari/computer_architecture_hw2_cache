@@ -76,10 +76,10 @@ void MemoryManager::read(unsigned addr) {
             // Insert the block fetched from L2 into L1
             LOG(DEBUG) << "Inserting address " << addr << " to L1.";
             L1.write(addr, false, false, &eviction_status, &write_back_addr);
-            if(L2.blockIsDirty(addr)){
-                L1.setBlockDirty(addr);
-                L2.setBlockNotDirty(addr);
-            }
+//            if(L2.blockIsDirty(addr)){
+//                L1.setBlockDirty(addr);
+//                L2.setBlockNotDirty(addr);
+//            }
             if(eviction_status == WRITE_BACK){
                 // Evict block from L1 to L2
                 LOG(DEBUG) << "Address" << write_back_addr << " was evicted from L1 during the insertion.";
@@ -163,7 +163,6 @@ void MemoryManager::write(unsigned int addr) {
             /** Block is not in L1 but is in L2 */
 
             LOG(DEBUG) << "Address " << addr << " was found in L2.";
-            assert(L2.blockExists(addr) && L2.blockIsDirty(addr));
 
             // Insert the block fetched from L2 into L1
             if(config.policy){
@@ -172,9 +171,9 @@ void MemoryManager::write(unsigned int addr) {
                 // Write allocate is enabled
                 L1.write(addr, false, false, &eviction_status, &write_back_addr);
                 L1.setBlockDirty(addr);
-                if(L2.blockIsDirty(addr)){
-                    L2.setBlockNotDirty(addr);
-                }
+//                if(L2.blockIsDirty(addr)){
+//                    L2.setBlockNotDirty(addr);
+//                }
                 if(eviction_status == WRITE_BACK){
                     // Evict block from L1 to L2
                     LOG(DEBUG) << "Address" << write_back_addr << " was evicted from L1 during the insertion.";
